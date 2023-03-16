@@ -1,26 +1,63 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div id="app">
+    <main-form @submitForm="onFormSubmit"></main-form>
+    <total-balance :total="totalBalance"></total-balance>
+    <budget-list :list="list" @deleteItem="onDeleteItem"></budget-list>
+  </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
-
+import BudgetList from "@/components/BudgetList.vue";
+import totalBalance from "@/components/TotalBalance.vue";
+import MainForm from "@/components/MainForm.vue";
 export default {
-  name: "App",
-  components: {
-    HelloWorld,
+  components: { BudgetList, totalBalance, MainForm },
+
+  data() {
+    return {
+      list: {
+        1: {
+          type: "INCOME",
+          value: 100,
+          comment: "Some comment",
+          id: 1,
+        },
+        2: {
+          type: "OUTCOME",
+          value: -50,
+          comment: "Some outcome comment",
+          id: 2,
+        },
+      },
+    };
+  },
+  computed: {
+    totalBalance() {
+      return Object.values(this.list).reduce(
+        (acc, item) => acc + item.value,
+        0
+      );
+    },
+  },
+
+  methods: {
+    onDeleteItem(item) {
+      delete this.list[item];
+    },
+    onFormSubmit(data) {
+      const newObj = {
+        ...data,
+        id: String(Math.random()),
+      };
+      this.createObj(newObj);
+    },
+
+    createObj(obj) {
+      let id = obj.id;
+      this.list[id] = obj;
+    },
   },
 };
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<style></style>
