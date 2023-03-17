@@ -31,12 +31,13 @@ export default {
       },
     };
   },
+  //
   computed: {
     totalBalance() {
-      return Object.values(this.list).reduce(
-        (acc, item) => acc + item.value,
-        0
-      );
+      return Object.values(this.list).reduce((acc, item) => {
+        if (item.type === "OUTCOME") return acc - item.value;
+        else return acc + item.value;
+      }, 0);
     },
   },
 
